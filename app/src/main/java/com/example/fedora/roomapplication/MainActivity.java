@@ -11,11 +11,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
-import com.jakewharton.rxbinding3.view.RxView;
 
 import org.reactivestreams.Publisher;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,19 +21,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Flowable;
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.Maybe;
-import io.reactivex.MaybeObserver;
-import io.reactivex.MaybeSource;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import kotlin.Unit;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -75,20 +65,18 @@ public class MainActivity extends AppCompatActivity {
                 .fallbackToDestructiveMigration()
                 .build();
 
-        Maybe<Drug> drugFlowable = drugDatabase.drugDao().getAllDrugs().flatMap(new Function<List<Drug>, MaybeSource<Drug>>() {
+        Flowable<Drug> drugFlowable = drugDatabase.drugDao().getAllDrugs().flatMap(new Function<List<Drug>, Publisher<Drug>>() {
             @Override
-            public MaybeSource<Drug> apply(List<Drug> drugs) throws Exception {
-                return null;
+            public Publisher<Drug> apply(List<Drug> drugs) throws Exception {
+                return Flowable.fromIterable(drugs);
             }
         });
 
-        subscription = drugFlowable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Drug>() {
-                    @Override
-                    public void accept(Drug drug) throws Exception {
-                        drugList.add(drug);
-                        adapter.notifyItemInserted(drugList.size()-1);
-                    }
+         drugFlowable.subscribeOn(Schedulers.io())
+                 .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(drug -> {
+                    drugList.add(drug);
+                    adapter.notifyItemInserted(drugList.size()-1);
                 });
 //        new Thread(new Runnable() {
 //            @Override
@@ -113,3 +101,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 }
+
+//
+//new Consumer<Drug>() {
+//@Override
+//public void accept(Drug drug) throws Exception {
+//        drugList.add(drug);
+//        adapter.notifyItemInserted(drugList.size()-1);
+//        }
+//        }

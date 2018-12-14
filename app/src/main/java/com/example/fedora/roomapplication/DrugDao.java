@@ -15,7 +15,7 @@ import io.reactivex.Observable;
 public interface DrugDao {
 
     @Query("SELECT * FROM drug")
-    Maybe<List<Drug>> getAllDrugs();
+    Flowable<List<Drug>> getAllDrugs();
 
 
 
