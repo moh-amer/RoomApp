@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cefotax vial"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:id="@+id/tv_drug_name"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cefotax vial"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:id="@+id/tv_drug_price"
+        />
+</LinearLayout>
